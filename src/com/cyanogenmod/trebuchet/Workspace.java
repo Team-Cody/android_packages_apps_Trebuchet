@@ -525,7 +525,6 @@ public class Workspace extends PagedView
         mDisplayWidth = display.getWidth();
         mDisplayHeight = display.getHeight();
         if (mScrollWallpaper) {
-            mWallpaperOffset = new WallpaperOffsetInterpolator();
             mWallpaperTravelWidth = (int) (mDisplayWidth *
                     wallpaperTravelToScreenWidthRatio(mDisplayWidth, mDisplayHeight));
         }
@@ -926,19 +925,6 @@ public class Workspace extends PagedView
         }.start();
     }
 
-    public void setVerticalWallpaperOffset(float offset) {
-        mWallpaperOffset.setFinalY(offset);
-    }
-    public float getVerticalWallpaperOffset() {
-        return mWallpaperOffset.getCurrY();
-    }
-    public void setHorizontalWallpaperOffset(float offset) {
-        mWallpaperOffset.setFinalX(offset);
-    }
-    public float getHorizontalWallpaperOffset() {
-        return mWallpaperOffset.getCurrX();
-    }
-
     private float wallpaperOffsetForCurrentScroll() {
         // The wallpaper travel width is how far, from left to right, the wallpaper will move
         // at this orientation. On tablets in portrait mode we don't move all the way to the
@@ -972,7 +958,7 @@ public class Workspace extends PagedView
     }
     private void syncWallpaperOffsetWithScroll() {
         if (mScrollWallpaper) {
-            mWallpaperOffset.setFinalX(wallpaperOffsetForCurrentScroll());
+            mWallpaperInterpolator.setFinalX(wallpaperOffsetForCurrentScroll());
         }
     }
 
