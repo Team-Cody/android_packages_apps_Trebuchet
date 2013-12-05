@@ -36,11 +36,8 @@ public class Preferences extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        SharedPreferences prefs =
-            getSharedPreferences(PreferencesProvider.PREFERENCES_KEY, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean(PreferencesProvider.PREFERENCES_CHANGED, true);
-                editor.commit();
+        mPrefs = getSharedPreferences(PreferencesProvider.PREFERENCES_KEY,
+                 Context.MODE_PRIVATE);
 
         // Remove some preferences on large screens
         if (LauncherApplication.isScreenLarge()) {
@@ -58,4 +55,22 @@ public class Preferences extends PreferenceActivity {
         Preference version = findPreference("application_version");
         version.setTitle(getString(R.string.application_name));
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPrefs.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean(PreferencesProvider.PREFERENCES_CHANGED, true);
+        editor.commit();
+    }
+
 }
