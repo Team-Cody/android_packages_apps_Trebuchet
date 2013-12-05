@@ -1583,7 +1583,7 @@ public class Workspace extends PagedView
     protected void onSizeChanged (int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        getLocationOnScreen(mWallpaperOffsets);	1429
+        getLocationOnScreen(mWallpaperOffsets);
     }
 
     @Override
