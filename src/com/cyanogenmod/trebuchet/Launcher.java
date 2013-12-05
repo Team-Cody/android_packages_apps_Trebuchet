@@ -263,6 +263,8 @@ public final class Launcher extends Activity
     private boolean mHideIconLabels;
     private boolean mAutoRotate;
 
+    private boolean mWallpaperVisible;
+
     private Runnable mBuildLayersRunnable = new Runnable() {
         public void run() {
             if (mWorkspace != null) {
@@ -1093,6 +1095,8 @@ public final class Launcher extends Activity
             } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
                 mUserPresent = true;
                 updateRunning();
+            } else if (Intent.ACTION_SET_WALLPAPER.equals(action)) {
+                mWorkspace.checkWallpaper();
             }
         }
     };
@@ -1105,6 +1109,7 @@ public final class Launcher extends Activity
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
+        filter.addAction(Intent.ACTION_SET_WALLPAPER);
         registerReceiver(mReceiver, filter);
 
         mAttached = true;
@@ -2282,8 +2287,13 @@ public final class Launcher extends Activity
         view.setPivotY(view.getHeight() / 2.0f);
     }
 
+    void setWallpaperVisibility(boolean visible) {
+        mWallpaperVisible = visible;
+        updateWallpaperVisibility(visible);
+    }
+
     void updateWallpaperVisibility(boolean visible) {
-        int wpflags = visible ? WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER : 0;
+        int wpflags = visible && mWallpaperVisible ? WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER : 0;
         int curflags = getWindow().getAttributes().flags
                 & WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER;
         if (wpflags != curflags) {

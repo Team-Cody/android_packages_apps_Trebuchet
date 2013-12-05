@@ -49,6 +49,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -118,8 +119,14 @@ public class Workspace extends PagedView
     private float mWallpaperScrollRatio = 1.0f;
 
     private final WallpaperManager mWallpaperManager;
+    private boolean mWallpaperHack;
+    private Bitmap mWallpaperBitmap;
+    private float mWallpaperScrollX;
+    private float mWallpaperScrollY;
+    private int[] mWallpaperOffsets = new int[2];
+    private Paint mPaint = new Paint();
     private IBinder mWindowToken;
-    private static final float WALLPAPER_SCREENS_SPAN = 2f;
+    private static final float DEFAULT_WALLPAPER_SCREENS_SPAN = 2f;
 
     /**
      * CellInfo for the cell that is currently being dragged
@@ -343,12 +350,14 @@ public class Workspace extends PagedView
                 res.getString(R.string.config_workspaceDefaultTransitionEffect));
         mFadeInAdjacentScreens = PreferencesProvider.Interface.Homescreen.Scrolling.getFadeInAdjacentScreens(context,
                 res.getBoolean(R.bool.config_workspaceDefualtFadeInAdjacentScreens));
+        mWallpaperHack = PreferencesProvider.Interface.Homescreen.Scrolling.getWallpaperHack(context);
         mShowScrollingIndicator = PreferencesProvider.Interface.Homescreen.Indicator.getShowScrollingIndicator(context);
         mFadeScrollingIndicator = PreferencesProvider.Interface.Homescreen.Indicator.getFadeScrollingIndicator(context);
         mShowDockDivider = PreferencesProvider.Interface.Homescreen.Indicator.getShowDockDivider(context);
 
         mLauncher = (Launcher) context;
         initWorkspace();
+        checkWallpaper();
 
         // Disable multitouch across the workspace/all apps/customize tray
         setMotionEventSplittingEnabled(true);
@@ -517,6 +526,21 @@ public class Workspace extends PagedView
             mWallpaperTravelWidth = (int) (mDisplayWidth *
                     wallpaperTravelToScreenWidthRatio(mDisplayWidth, mDisplayHeight));
         }
+    }
+
+    protected void checkWallpaper() {
+        if (mWallpaperHack) {
+            if (mWallpaperBitmap != null) {
+                mWallpaperBitmap = null;
+            }
+            if (mWallpaperManager.getWallpaperInfo() == null) {
+                Drawable wallpaper = mWallpaperManager.getDrawable();
+                if (wallpaper instanceof BitmapDrawable) {
+                    mWallpaperBitmap = ((BitmapDrawable) wallpaper).getBitmap();
+                }
+            }
+        }
+        mLauncher.setWallpaperVisibility(mWallpaperBitmap == null);
     }
 
     @Override
@@ -887,7 +911,7 @@ public class Workspace extends PagedView
             mWallpaperWidth = (int) (maxDim * wallpaperTravelToScreenWidthRatio(maxDim, minDim));
             mWallpaperHeight = maxDim;
         } else {
-            mWallpaperWidth = Math.max((int) (minDim * WALLPAPER_SCREENS_SPAN), maxDim);
+            mWallpaperWidth = Math.max((int) (minDim * DEFAULT_WALLPAPER_SCREENS_SPAN), maxDim);
             mWallpaperHeight = maxDim;
         }
         new Thread("setWallpaperDimension") {
@@ -948,9 +972,13 @@ public class Workspace extends PagedView
     }
 
     private void centerWallpaperOffset() {
-        mWallpaperManager.setWallpaperOffsetSteps(0.5f, 0);
-        mWallpaperManager.setWallpaperOffsets(getWindowToken(), 0.5f, 0);
-    }
+        if (mWallpaperHack) {
+            mWallpaperScrollX = 0.5f;
+        } else if (mWindowToken != null) {
+            mWallpaperManager.setWallpaperOffsetSteps(0.5f, 0);
+            mWallpaperManager.setWallpaperOffsets(getWindowToken(), 0.5f, 0);
+        }
+     }
 
     public void updateWallpaperOffsetImmediately() {
         mUpdateWallpaperOffsetImmediately = true;
@@ -968,7 +996,10 @@ public class Workspace extends PagedView
             updateNow = keepUpdating = mWallpaperOffset.computeScrollOffset();
         }
         if (updateNow) {
-            if (mWindowToken != null) {
+            if (mWallpaperHack) {
+                 mWallpaperScrollX = mWallpaperOffset.getCurrX();
+                 mWallpaperScrollY = mWallpaperOffset.getCurrY();
+             } else if (mWindowToken != null) {
                 mWallpaperManager.setWallpaperOffsets(mWindowToken,
                         mWallpaperOffset.getCurrX(), mWallpaperOffset.getCurrY());
             }
@@ -1549,12 +1580,44 @@ public class Workspace extends PagedView
         }
     }
 
+    protected void onSizeChanged (int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        getLocationOnScreen(mWallpaperOffsets);	1429
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (mScrollWallpaper) {
             updateWallpaperOffsets();
         }
+        
+        // Draw the wallpaper if necessary
+        if (mWallpaperHack && mWallpaperBitmap != null) {
+            float x = getScrollX();
+            float y = getScrollY();
 
+            int width = getWidth();
+            int height = getHeight();
+            int wallpaperWidth = mWallpaperBitmap.getWidth();
+            int wallpaperHeight = mWallpaperBitmap.getHeight();
+
+            if (width + mWallpaperOffsets[0] > wallpaperWidth) {
+                // Wallpaper is smaller than screen
+                x += (width - wallpaperWidth) / 2;
+            } else {
+                x -= mWallpaperScrollX * (wallpaperWidth - width) + mWallpaperOffsets[0];
+            }
+            if (height + mWallpaperOffsets[1] > wallpaperHeight) {
+                // Wallpaper is smaller than screen
+                y += (height - wallpaperHeight) / 2;
+            } else {
+                y -= mWallpaperScrollY * (wallpaperHeight - height) + mWallpaperOffsets[1];
+            }
+
+            canvas.drawBitmap(mWallpaperBitmap, x, y, mPaint);
+        }
+        
         // Draw the background gradient if necessary
         if (mBackground != null && mBackgroundAlpha > 0.0f && mDrawBackground) {
             int alpha = (int) (mBackgroundAlpha * 255);
