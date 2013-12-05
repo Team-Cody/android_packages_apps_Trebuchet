@@ -543,6 +543,9 @@ public class Workspace extends PagedView
             }
         }
         mLauncher.setWallpaperVisibility(mWallpaperBitmap == null);
+
+        // Make sure wallpaper gets redrawn to avoid ghost wallpapers
+        invalidate();
     }
 
     @Override
