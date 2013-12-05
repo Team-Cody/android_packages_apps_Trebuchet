@@ -2676,8 +2676,24 @@ public class Workspace extends PagedView
                         }
                     }
 
+                    // No_id check required as the AllApps button doesn't have an item info id
+                    if (info.id != ItemInfo.NO_ID) {
                     LauncherModel.moveItemInDatabase(mLauncher, info, container, screen, lp.cellX,
                             lp.cellY);
+                     } else if (info instanceof AllAppsButtonInfo) {
+                             if (!LauncherApplication.isScreenLandscape(getContext())) {
+                                 PreferencesProvider.Interface.Dock.setDefaultHotseatIcon(getContext(), lp.cellX);
+                             } else {
+                                 PreferencesProvider.Interface.Dock.setDefaultHotseatIcon(getContext(), lp.cellY);
+                             }
+                    }
+                 } else {
+                 // If we can't find a drop location, we return the item to its original position
+                 CellLayout.LayoutParams lp = (CellLayout.LayoutParams) cell.getLayoutParams();
+                 mTargetCell[0] = lp.cellX;
+                 mTargetCell[1] = lp.cellY;
+                 CellLayout layout = (CellLayout) cell.getParent().getParent();
+                 layout.markCellsAsOccupiedForView(cell);                            
                 }
             }
 
@@ -3108,6 +3124,10 @@ public class Workspace extends PagedView
         return d.dragSource != this && isDragWidget(d);
     }
 
+    private boolean isDragAllAppsButton(DragObject d) {
+        return (d.dragInfo instanceof AllAppsButtonInfo);
+    }
+
     public void onDragOver(DragObject d) {
         // Skip drag over events while we are dragging over side pages
         if (mInScrollArea) return;
@@ -3126,7 +3146,7 @@ public class Workspace extends PagedView
         if (isSmall()) {
             if (mLauncher.getHotseat() != null && !isExternalDragWidget(d)) {
                 mLauncher.getHotseat().getHitRect(r);
-                if (r.contains(d.x, d.y)) {
+                if (r.contains(d.x, d.y) || isDragAllAppsButton(d)) {
                     layout = mLauncher.getHotseat().getLayout();
                 }
             }

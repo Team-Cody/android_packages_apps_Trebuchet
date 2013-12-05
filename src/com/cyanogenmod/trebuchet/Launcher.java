@@ -2276,6 +2276,17 @@ public final class Launcher extends Activity
         return (mState == State.APPS_CUSTOMIZE);
     }
 
+    public boolean isAllAppsButtonRank(int rank) {
+        return (mHotseat != null) ? mHotseat.isAllAppsButtonRank(rank) : false;
+    }
+
+    // AllAppsView.Watcher
+    public void zoomed(float zoom) {
+        if (zoom == 1.0f) {
+           mWorkspace.setVisibility(View.GONE);
+        }
+     }
+
     /**
      * Helper method for the cameraZoomIn/cameraZoomOut animations
      * @param view The view being animated

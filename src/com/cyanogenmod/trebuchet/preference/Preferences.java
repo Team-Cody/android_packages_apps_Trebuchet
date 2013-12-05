@@ -35,6 +35,9 @@ public class Preferences extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+        if (LauncherApplication.isScreenLarge()) {
+            findPreference("ui_dock").setEnabled(false);
+        }
 
         mPrefs = getSharedPreferences(PreferencesProvider.PREFERENCES_KEY,
                  Context.MODE_PRIVATE);
