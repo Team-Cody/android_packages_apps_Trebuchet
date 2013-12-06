@@ -958,7 +958,7 @@ public class Workspace extends PagedView
     }
     private void syncWallpaperOffsetWithScroll() {
         if (mScrollWallpaper) {
-            mWallpaperInterpolator.setFinalX(wallpaperOffsetForCurrentScroll());
+            mWallpaperOffset.setFinalX(wallpaperOffsetForCurrentScroll());
         }
     }
 

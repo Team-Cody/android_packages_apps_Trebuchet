@@ -2286,7 +2286,6 @@ public final class Launcher extends Activity
     }
 
     void setWallpaperVisibility(boolean visible) {
-        mWallpaperVisible = visible;
         updateWallpaperVisibility(visible);
     }
 
