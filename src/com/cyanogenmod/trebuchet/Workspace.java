@@ -525,6 +525,7 @@ public class Workspace extends PagedView
         mDisplayWidth = display.getWidth();
         mDisplayHeight = display.getHeight();
         if (mScrollWallpaper) {
+			mWallpaperOffset = new WallpaperOffsetInterpolator();
             mWallpaperTravelWidth = (int) (mDisplayWidth *
                     wallpaperTravelToScreenWidthRatio(mDisplayWidth, mDisplayHeight));
         }
