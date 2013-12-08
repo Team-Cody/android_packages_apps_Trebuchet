@@ -543,7 +543,9 @@ public class Workspace extends PagedView
                 }
             }
         }
-
+        
+        mLauncher.setWallpaperVisibility(mWallpaperBitmap == null);
+        
         // Make sure wallpaper gets redrawn to avoid ghost wallpapers
         invalidate();
     }
@@ -1591,6 +1593,7 @@ public class Workspace extends PagedView
         
         // Draw the wallpaper if necessary
         if (mWallpaperHack && mWallpaperBitmap != null) {
+            mLauncher.setWallpaperVisibility(true);
             float x = getScrollX();
             float y = getScrollY();
 
@@ -1611,7 +1614,8 @@ public class Workspace extends PagedView
             } else {
                 y -= mWallpaperScrollY * (wallpaperHeight - height) + mWallpaperOffsets[1];
             }
-
+            mLauncher.setWallpaperVisibility(false);
+            
             canvas.drawBitmap(mWallpaperBitmap, x, y, mPaint);
         }
         
