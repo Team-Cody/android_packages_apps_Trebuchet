@@ -153,8 +153,8 @@ public class DragLayer extends FrameLayout {
 
     @Override
     public boolean onInterceptHoverEvent(MotionEvent ev) {
-        Folder currentFolder;
-        if (mLauncher.getWorkspace()==null || (currentFolder = mLauncher.getWorkspace().getOpenFolder())==null) {
+        Folder currentFolder = mLauncher.getWorkspace().getOpenFolder();
+        if (currentFolder == null) {
             return false;
         } else {
             if (AccessibilityManager.getInstance(mContext).isTouchExplorationEnabled()) {

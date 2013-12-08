@@ -27,20 +27,20 @@ import com.cyanogenmod.trebuchet.LauncherApplication;
 
 import com.cyanogenmod.trebuchet.R;
 
-public class Preferences extends PreferenceActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class Preferences extends PreferenceActivity {
 
     private static final String TAG = "Launcher.Preferences";
-
-    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        mPrefs = getSharedPreferences(PreferencesProvider.PREFERENCES_KEY,
-                 Context.MODE_PRIVATE);
+        SharedPreferences prefs =
+            getSharedPreferences(PreferencesProvider.PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean(PreferencesProvider.PREFERENCES_CHANGED, true);
+                editor.commit();
 
         // Remove some preferences on large screens
         if (LauncherApplication.isScreenLarge()) {
@@ -56,24 +56,6 @@ public class Preferences extends PreferenceActivity
         }
 
         Preference version = findPreference("application_version");
-        version.setTitle(getString(R.string.application_name) + " " + getString(R.string.application_version));
+        version.setTitle(getString(R.string.application_name));
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mPrefs.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        mPrefs.unregisterOnSharedPreferenceChangeListener(this);
-        super.onPause();
-    }
-
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putBoolean(PreferencesProvider.PREFERENCES_CHANGED, true);
-        editor.commit();
-    }
-
 }

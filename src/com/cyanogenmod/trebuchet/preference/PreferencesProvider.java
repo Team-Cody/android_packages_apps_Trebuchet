@@ -83,10 +83,6 @@ public final class PreferencesProvider {
                     final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_KEY, 0);
                     return preferences.getBoolean("ui_homescreen_scrolling_scroll_wallpaper", true);
                 }
-                public static boolean getWallpaperHack(Context context) {
-                    final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_KEY, 0);
-                    return preferences.getBoolean("ui_homescreen_scrolling_wallpaper_hack", true);
-                }
                 public static Workspace.TransitionEffect getTransitionEffect(Context context, String def) {
                     final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_KEY, 0);
                     return Workspace.TransitionEffect.valueOf(

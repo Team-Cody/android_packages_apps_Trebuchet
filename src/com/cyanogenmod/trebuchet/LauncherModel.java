@@ -225,8 +225,8 @@ public class LauncherModel extends BroadcastReceiver {
                 // Items are added/removed from the corresponding FolderInfo elsewhere, such
                 // as in Workspace.onDrop. Here, we just add/remove them from the list of items
                 // that are on the desktop, as appropriate
-                if (modelItem != null && (modelItem.container == LauncherSettings.Favorites.CONTAINER_DESKTOP ||
-                        modelItem.container == LauncherSettings.Favorites.CONTAINER_HOTSEAT)) {
+                if (modelItem.container == LauncherSettings.Favorites.CONTAINER_DESKTOP ||
+                        modelItem.container == LauncherSettings.Favorites.CONTAINER_HOTSEAT) {
                     if (!sWorkspaceItems.contains(modelItem)) {
                         sWorkspaceItems.add(modelItem);
                     }
