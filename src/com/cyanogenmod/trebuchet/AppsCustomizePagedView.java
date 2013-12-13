@@ -507,6 +507,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     public void showAllAppsCling() {
+        AppsCustomizeTabHost tabHost = getTabHost();
         if (tabHost != null) {
             Cling allAppsCling = (Cling) tabHost.findViewById(R.id.all_apps_cling);
              if (!mHasShownAllAppsCling && isDataReady()) {
