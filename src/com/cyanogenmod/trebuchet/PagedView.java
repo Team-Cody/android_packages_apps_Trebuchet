@@ -60,7 +60,7 @@ public abstract class PagedView extends ViewGroup {
     // the min drag distance for a fling to register, to prevent random page shifts
     private static final int MIN_LENGTH_FOR_FLING = 25;
 
-    private static final int PAGE_SNAP_ANIMATION_DURATION = 550;
+    private static final int PAGE_SNAP_ANIMATION_DURATION = 400;
 
     private static final float OVERSCROLL_ACCELERATE_FACTOR = 2;
     private static final float OVERSCROLL_DAMP_FACTOR = 0.14f;
@@ -234,7 +234,7 @@ public abstract class PagedView extends ViewGroup {
     protected void init() {
         mDirtyPageContent = new ArrayList<Boolean>();
         mDirtyPageContent.ensureCapacity(32);
-        mScroller = new Scroller(getContext(), new ScrollInterpolator());
+        mScroller = new Scroller(getContext(), getScrollInterpolator());
         mCurrentPage = 0;
         mCenterPagesVertically = true;
 
@@ -1399,14 +1399,28 @@ public abstract class PagedView extends ViewGroup {
         snapToPage(getPageNearestToCenterOfScreen(), PAGE_SNAP_ANIMATION_DURATION);
     }
 
-    private static class ScrollInterpolator implements Interpolator {
-        public ScrollInterpolator() {
+     public static class QuintInterpolator implements Interpolator {
+        public QuintInterpolator() {
         }
 
         public float getInterpolation(float t) {
             t -= 1.0f;
             return t*t*t*t*t + 1;
         }
+    }
+
+    public static class QuadInterpolator implements Interpolator {
+        public QuadInterpolator() {
+        }
+
+        public float getInterpolation(float t) {
+            t -= 1.0f;
+            return -(t*t*t*t - 1);
+        }
+    }
+
+    protected Interpolator getScrollInterpolator() {
+        return new QuintInterpolator();
     }
 
     // We want the duration of the page snap animation to be influenced by the distance that
