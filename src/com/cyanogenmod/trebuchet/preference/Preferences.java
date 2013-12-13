@@ -27,9 +27,12 @@ import com.cyanogenmod.trebuchet.LauncherApplication;
 
 import com.cyanogenmod.trebuchet.R;
 
-public class Preferences extends PreferenceActivity {
+public class Preferences extends PreferenceActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {	
 
     private static final String TAG = "Launcher.Preferences";
+
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class Preferences extends PreferenceActivity {
         }
 
         Preference version = findPreference("application_version");
-        version.setTitle(getString(R.string.application_name));
+        version.setTitle(getString(R.string.application_name) + " " + getString(R.string.application_version));
     }
     @Override
     protected void onResume() {
