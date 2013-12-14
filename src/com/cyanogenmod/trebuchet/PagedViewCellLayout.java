@@ -89,17 +89,6 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         mChildren.setAlpha(alpha);
     }
 
-    void destroyHardwareLayers() {
-        // called when a page is no longer visible (triggered by loadAssociatedPages ->
-        // removeAllViewsOnPage)
-        mChildren.destroyHardwareLayer();
-    }
-
-    void createHardwareLayers() {
-        // called when a page is visible (triggered by loadAssociatedPages -> syncPageItems)
-        mChildren.createHardwareLayer();
-    }
-
     @Override
     public void cancelLongPress() {
         super.cancelLongPress();
@@ -136,7 +125,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
     @Override
     public void removeAllViewsOnPage() {
         mChildren.removeAllViews();
-        destroyHardwareLayers();
+        setLayerType(LAYER_TYPE_NONE, null);
     }
 
     @Override
