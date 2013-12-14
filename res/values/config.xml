@@ -7,12 +7,12 @@
 
 <!-- AllApps/Customize/AppsCustomize -->
     <!-- Which default transition effect to use on the AppsCustomize -->
-    <string name="config_drawerDefaultTransitionEffect">Stack</string>
+    <string name="config_drawerDefaultTransitionEffect">CubeOut</string>
     <!-- The alpha of the AppsCustomize bg in spring loaded mode -->
     <integer name="config_appsCustomizeSpringLoadedBgAlpha">45</integer>
     <!-- Fade in/out duration of icons being dragged from the trays -->
-    <integer name="config_dragAppsCustomizeIconFadeInDuration">150</integer>
-    <integer name="config_dragAppsCustomizeIconFadeOutDuration">200</integer>
+    <integer name="config_dragAppsCustomizeIconFadeInDuration">130</integer>
+    <integer name="config_dragAppsCustomizeIconFadeOutDuration">180</integer>
     <integer name="config_dragAppsCustomizeIconFadeAlpha">100</integer>
     <integer name="config_workspaceUnshrinkTime">300</integer>
     <!-- Out of 100, the percent to shrink the workspace during spring loaded mode. -->
@@ -28,17 +28,17 @@
 
     <!-- Fade/zoom in/out duration & scale in the AllApps transition.
          Note: This should be less than the workspaceShrinkTime as they happen together. -->
-    <integer name="config_appsCustomizeZoomInTime">350</integer>
-    <integer name="config_appsCustomizeZoomOutTime">600</integer>
+    <integer name="config_appsCustomizeZoomInTime">330</integer>
+    <integer name="config_appsCustomizeZoomOutTime">550</integer>
     <integer name="config_appsCustomizeZoomScaleFactor">7</integer>
-    <integer name="config_appsCustomizeFadeInTime">250</integer>
-    <integer name="config_appsCustomizeFadeOutTime">200</integer>
-    <integer name="config_appsCustomizeWorkspaceShrinkTime">300</integer>
+    <integer name="config_appsCustomizeFadeInTime">230</integer>
+    <integer name="config_appsCustomizeFadeOutTime">180</integer>
+    <integer name="config_appsCustomizeWorkspaceShrinkTime">280</integer>
     <integer name="config_appsCustomizeWorkspaceAnimationStagger">40</integer>
     <integer name="config_workspaceAppsCustomizeAnimationStagger">100</integer>
 
     <!-- Tab transition animation duration -->
-    <integer name="config_tabTransitionDuration">250</integer>
+    <integer name="config_tabTransitionDuration">230</integer>
 
     <!-- The slope, in percent, of the drag movement needed to drag an item out of
          AppsCustomize (y / x * 100%)  -->
@@ -48,9 +48,9 @@
     <!-- Whether or not the drop targets drop down as opposed to fade in -->
     <bool name="config_useDropTargetDownTransition">true</bool>
     <!-- Which default transition effect to use on the workspace -->
-    <string name="config_workspaceDefaultTransitionEffect">Standard</string>
+    <string name="config_workspaceDefaultTransitionEffect">CubeOut</string>
     <!-- Whether to fade the adjacent screens when scrolling -->
-    <bool name="config_workspaceDefualtFadeInAdjacentScreens">false</bool>
+    <bool name="config_workspaceDefualtFadeInAdjacentScreens">true</bool>
 
     <!-- The transition duration for the background of the drop targets -->
     <integer name="config_dropTargetBgTransitionDuration">100</integer>
