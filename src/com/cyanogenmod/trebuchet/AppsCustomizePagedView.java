@@ -1752,7 +1752,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         for (int i = 0; i < screenCount; i++) {
             final View layout = (View) getPageAt(i);
             if (!(leftScreen <= i && i <= rightScreen &&
-                    (i == forceDrawScreen || shouldDrawChild(layout)))) {
+                    (i == forceDrawScreen))) {
                 layout.setLayerType(LAYER_TYPE_NONE, null);
             }
         }
@@ -1763,7 +1763,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             final View layout = (View) getPageAt(i);
 
             if (leftScreen <= i && i <= rightScreen &&
-                    (i == forceDrawScreen || shouldDrawChild(layout))) {
+                    (i == forceDrawScreen)) {
                 if (layout.getLayerType() != LAYER_TYPE_HARDWARE) {
                     layout.setLayerType(LAYER_TYPE_HARDWARE, null);
                 }
