@@ -98,10 +98,18 @@ public class PagedViewGridLayout extends GridLayout implements Page {
         return result;
     }
 
+    void destroyHardwareLayer() {
+        setLayerType(LAYER_TYPE_NONE, null);
+    }
+
+    void createHardwareLayer() {
+        setLayerType(LAYER_TYPE_HARDWARE, null);
+    }
+
     @Override
     public void removeAllViewsOnPage() {
         removeAllViews();
-        setLayerType(LAYER_TYPE_NONE, null);
+        destroyHardwareLayer();
     }
 
     @Override
